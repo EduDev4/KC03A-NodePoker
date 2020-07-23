@@ -1,0 +1,25 @@
+{
+  "name": "nodepoker",
+  "version": "0.0.1",
+  "description": "A tiny poker game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EduDev4/KC03A-NodePoker.git"
+  },
+  "keywords": [
+    "poker",
+    "nodejs",
+    "two",
+    "players"
+  ],
+  "author": "Eduardo Fernandez Alija",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EduDev4/KC03A-NodePoker/issues"
+  },
+  "homepage": "https://github.com/EduDev4/KC03A-NodePoker#readme"  
+}
