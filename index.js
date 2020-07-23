@@ -443,7 +443,18 @@ function logger (text, mode) {
 }
 
 //  GAME START
-const playersNames = ['Carlos', 'Laura', 'Inés', 'Rubén', 'María', 'Eduardo', 'Pedro', 'Iker', 'Noelia', 'Miren']
+const playersNames = [
+  'Carlos',
+  'Laura',
+  'Inés',
+  'Rubén',
+  'María',
+  'Eduardo',
+  'Pedro',
+  'Iker',
+  'Noelia',
+  'Miren'
+]
 
 const players = []
 for (let i = 0; i < playersNames.length; i++) {
