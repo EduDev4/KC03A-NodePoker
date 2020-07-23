@@ -368,6 +368,7 @@ class Croupier {
       for (let i = 0; i < player.pool.length; i++) {
         poolText = poolText + player.pool[i].toString()
       }
+      logger(`\n\n ***** -> ${player.name} Wins with ${player.game_name}: ${gameText}\t${poolText} <- *****\n`, 'stream')
       console.log(`\n\n ***** -> ${player.name} Wins with ${player.game_name}: ${gameText}\t${poolText} <- *****\n`)
     }
 
