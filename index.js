@@ -488,7 +488,7 @@ function playGame () {
   // Write to file
   loggerAsync(croupier.gameLog)
   loggerSync(croupier.gameLog)
-  loggerStream(croupier.gameLog) */
+  loggerStream(croupier.gameLog)
   return winner.gameName
 }
 
