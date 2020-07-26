@@ -147,7 +147,7 @@ class Player {
   hasStraightFlush () {
     const result = (this.hasStraight() && this.hasFlush())
     if (result) {
-      this.game_name = 'Stright Flush'
+      this.game_name = 'Straight Flush'
     }
     return result
   }
@@ -351,9 +351,9 @@ class Croupier {
 
   deal () {
     for (let i = 0; i < 5; i++) {
-      for (let j = 0; j < players.length; j++) {
-        players[j].hand.push(this.deck.draw())
-        players[j].sortHandByValue()
+      for (let j = 0; j < this.players.length; j++) {
+        this.players[j].hand.push(this.deck.draw())
+        this.players[j].sortHandByValue()
       }
     }
   }
@@ -373,41 +373,42 @@ class Croupier {
     }
 
     let winner
-    for (let j = 0; j < players.length; j++) {
-      if (!players[j].hasStraightFlush()) {
-        if (!players[j].hasFlush()) {
-          if (!players[j].hasStraight()) {
-            if (!players[j].hasSameOfAKind().result) {
+    for (let j = 0; j < this.players.length; j++) {
+      if (!this.players[j].hasStraightFlush()) {
+        if (!this.players[j].hasFlush()) {
+          if (!this.players[j].hasStraight()) {
+            if (!this.players[j].hasSameOfAKind().result) {
               // Results stored in Player object. You can print them out here if needed
             }
           }
         }
       }
-      console.log(`${players[j].name} has ${players[j].game_name} [Game Score: ${players[j].getGameScale()}] [Game Points: ${players[j].game_score}] [Pool Points: ${players[j].pool_score}]`)
+      console.log(`${this.players[j].name} has ${this.players[j].game_name} [Game Score: ${this.players[j].getGameScale()}] [Game Points: ${this.players[j].game_score}] [Pool Points: ${this.players[j].pool_score}]`)
       if (j === 0) {
-        winner = players[j]
+        winner = this.players[j]
       } else {
-        if (players[j].getGameScale() === winner.getGameScale()) {
-          if (players[j].game_score === winner.game_score) {
-            if (players[j].pool_score > winner.pool_score) {
-              winner = players[j]
+        if (this.players[j].getGameScale() === winner.getGameScale()) {
+          if (this.players[j].game_score === winner.game_score) {
+            if (this.players[j].pool_score > winner.pool_score) {
+              winner = this.players[j]
             }
           } else {
-            if (players[j].game_score > winner.game_score) {
-              winner = players[j]
+            if (this.players[j].game_score > winner.game_score) {
+              winner = this.players[j]
             }
           }
         } else {
-          if (players[j].getGameScale() > winner.getGameScale()) {
-            winner = players[j]
+          if (this.players[j].getGameScale() > winner.getGameScale()) {
+            winner = this.players[j]
           }
         }
-        if (players[j].getGameScale() > winner.getGameScale()) {
-          winner = players[j]
+        if (this.players[j].getGameScale() > winner.getGameScale()) {
+          winner = this.players[j]
         }
       }
     }
     printWinnerHand(winner)
+    return winner
   }
 
   revealHands () {
@@ -442,38 +443,46 @@ function logger (text, mode) {
   }
 }
 
-//  GAME START
-const playersNames = [
-  'Carlos',
-  'Laura',
-  'Inés',
-  'Rubén',
-  'María',
-  'Eduardo',
-  'Pedro',
-  'Iker',
-  'Noelia',
-  'Miren'
-]
+function playGame () {
+  //  GAME START
+  const playersNames = [
+    'Carlos',
+    'Laura',
+    'Inés',
+    'Rubén',
+    'María',
+    'Eduardo',
+    'Pedro',
+    'Iker',
+    'Noelia',
+    'Miren'
+  ]
 
-const players = []
-for (let i = 0; i < playersNames.length; i++) {
-  const player = new Player(playersNames[i])
-  players.push(player)
+  const players = []
+  for (let i = 0; i < playersNames.length; i++) {
+    const player = new Player(playersNames[i])
+    players.push(player)
+  }
+
+  const deck = new Deck()
+  deck.init()
+  const croupier = new Croupier(deck, players)
+  console.log('****************************************\nCroupier opens a new Deck:\n')
+  croupier.revealDeck()
+  console.log('\nCroupier shuffles Deck...\n')
+  croupier.shuffle()
+  console.log('\nCroupier dealing...\n')
+  croupier.deal()
+  console.log('\nPlayers reveal hands...\n')
+  croupier.revealHands()
+  console.log('\nCroupier resolves game:\n')
+  const winner = croupier.resolveGame()
+  console.log('\nCroupier reveals remaining Cards in Deck:\n')
+  croupier.revealDeck()
+  return winner.game_name
 }
 
-const deck = new Deck()
-deck.init()
-const croupier = new Croupier(deck, players)
-console.log('****************************************\nCroupier opens a new Deck:\n')
-croupier.revealDeck()
-console.log('\nCroupier shuffles Deck...\n')
-croupier.shuffle()
-console.log('\nCroupier dealing...\n')
-croupier.deal()
-console.log('\nPlayers reveal hands...\n')
-croupier.revealHands()
-console.log('\nCroupier resolves game:\n')
-croupier.resolveGame()
-console.log('\nCroupier reveals remaining Cards in Deck:\n')
-croupier.revealDeck()
+let game = playGame()
+while (game !== 'Straight Flush') {
+  game = playGame()
+} 
