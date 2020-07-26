@@ -485,4 +485,4 @@ function playGame () {
 let game = playGame()
 while (game !== 'Straight Flush') {
   game = playGame()
-} 
+}
