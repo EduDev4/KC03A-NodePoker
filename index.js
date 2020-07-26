@@ -368,9 +368,9 @@ class Croupier {
       }
       for (let i = 0; i < player.pool.length; i++) {
         poolText = poolText + player.pool[i].toString()
-      }  
+      }
       return `\n\n ***** -> ${player.name} Wins with ${player.gameName}: ${gameText}\t${poolText} <- *****\n`
-      //loggerSync(`\n\n ***** -> ${player.name} Wins with ${player.gameName}: ${gameText}\t${poolText} <- *****\n`)
+      // loggerSync(`\n\n ***** -> ${player.name} Wins with ${player.gameName}: ${gameText}\t${poolText} <- *****\n`)
     }
 
     let winner
@@ -385,7 +385,7 @@ class Croupier {
         }
       }
       this.gameLog = this.gameLog + `${this.players[j].name} has ${this.players[j].gameName} [Game Score: ${this.players[j].getGameScale()}] [Game Points: ${this.players[j].game_score}] [Pool Points: ${this.players[j].pool_score}]\n`
-      //loggerSync(`${this.players[j].name} has ${this.players[j].gameName} [Game Score: ${this.players[j].getGameScale()}] [Game Points: ${this.players[j].game_score}] [Pool Points: ${this.players[j].pool_score}]`)
+      // loggerSync(`${this.players[j].name} has ${this.players[j].gameName} [Game Score: ${this.players[j].getGameScale()}] [Game Points: ${this.players[j].game_score}] [Pool Points: ${this.players[j].pool_score}]`)
       if (j === 0) {
         winner = this.players[j]
       } else {
@@ -421,7 +421,7 @@ class Croupier {
   }
 
   revealDeck () {
-    this.gameLog = this.gameLog + this.deck.showDeck()    
+    this.gameLog = this.gameLog + this.deck.showDeck()
   }
 }
 
@@ -430,14 +430,14 @@ function loggerStream (text) {
   console.log(text)
   var stream = fs.createWriteStream('stream_game-results.txt', { flags: 'a' })
   stream.write(text + '\n')
-  stream.end() 
+  stream.end()
 }
 
 function loggerAsync (text) {
   const fs = require('fs')
   console.log(text)
   fs.writeFile('async_game-results.txt', text, function (err) {
-    if (err) return console.log(err)        
+    if (err) return console.log(err)
   })
 }
 
@@ -445,12 +445,12 @@ function loggerSync (text) {
   const fs = require('fs')
   console.log(text)
   fs.writeFileSync('sync_game-results.txt', text, function (err) {
-    if (err) return console.log(err)        
+    if (err) return console.log(err)
   })
 }
 
 function playGame () {
-  //  GAME START  
+  //  GAME START
   const playersNames = [
     'Carlos',
     'Laura'
@@ -494,9 +494,8 @@ function playGame () {
 
 playGame()
 
-
-/* Loop until a game is won with a specific score
+/*  Loop until a game is won with a specific score
 let game = playGame()
 while (game !== 'Pair') {
   game = playGame()
-}*/
+} */
