@@ -3,7 +3,8 @@
 ## Solución aplicada  
   
   Partida de Póker automática de 1 a 10 jugadores con 5 cartas cada uno.  
-  Para añadir o eliminar jugadores se deben añadir o eliminar sus nombres del array 'players'.  
+  Para añadir o eliminar jugadores se deben añadir o eliminar sus nombres del array 'players'.
+  Tres funciones para guardar en fichero la partida. loggerStream, loggerSync y loggerAsync. 
   
 ### Clases:  
 #### Player  

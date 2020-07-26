@@ -6,13 +6,13 @@ class Player {
     this.pool = []
     this.game_score = 0
     this.pool_score = 0
-    this.game_name = ''
+    this.gameName = ''
     this.chips = 500
   }
 
   getGameScale () {
     let scale = 0
-    switch (this.game_name) {
+    switch (this.gameName) {
       case 'Straight Flush':
         scale = 9
         break
@@ -55,7 +55,7 @@ class Player {
     this.hand.forEach(function (card) {
       handString = `${handString} ${card.toString()}`
     })
-    console.log(handString)
+    return handString + '\n'
   }
 
   getCardsByRank (rank) {
@@ -98,7 +98,7 @@ class Player {
     this.game = []
     this.pool = []
     let result = true
-    this.game_name = 'Straight'
+    this.gameName = 'Straight'
     let compareCardRank
     const hand = this.hand
     for (let i = 0; i < hand.length; i++) {
@@ -125,7 +125,7 @@ class Player {
     this.game = []
     this.pool = []
     let result = true
-    this.game_name = 'Flush'
+    this.gameName = 'Flush'
     let previousCardSuit = ''
     const hand = this.hand
     for (let i = 0; i < hand.length; i++) {
@@ -133,7 +133,7 @@ class Player {
       if (previousCardSuit !== '') {
         if (previousCardSuit !== card.suitKey) {
           result = false
-          this.game_name = ''
+          this.gameName = ''
           this.game_score = 0
         }
       }
@@ -147,7 +147,7 @@ class Player {
   hasStraightFlush () {
     const result = (this.hasStraight() && this.hasFlush())
     if (result) {
-      this.game_name = 'Straight Flush'
+      this.gameName = 'Straight Flush'
     }
     return result
   }
@@ -254,12 +254,12 @@ class Player {
         }
       }
     }
-    this.game_name = output.game
+    this.gameName = output.game
     return output
   }
 
   toString () {
-    return `[${this.name} (${this.chips}): ${this.hand}]`
+    return `[${this.name} (${this.chips}): ${this.hand}]\n`
   }
 }
 
@@ -302,12 +302,12 @@ class Deck {
     return this.cards.pop()
   }
 
-  toString () {
+  showDeck () {
     let deckString = ''
     this.cards.forEach(function (card) {
       deckString = `${deckString} ${card.toString()}`
     })
-    console.log(deckString)
+    return deckString + '\n'
   }
 }
 
@@ -329,6 +329,7 @@ class Croupier {
   constructor (deck, players) {
     this.deck = deck
     this.players = players
+    this.gameLog = ''
   }
 
   shuffle () {
@@ -367,9 +368,9 @@ class Croupier {
       }
       for (let i = 0; i < player.pool.length; i++) {
         poolText = poolText + player.pool[i].toString()
-      }
-      logger(`\n\n ***** -> ${player.name} Wins with ${player.game_name}: ${gameText}\t${poolText} <- *****\n`, 'stream')
-      console.log(`\n\n ***** -> ${player.name} Wins with ${player.game_name}: ${gameText}\t${poolText} <- *****\n`)
+      }  
+      return `\n\n ***** -> ${player.name} Wins with ${player.gameName}: ${gameText}\t${poolText} <- *****\n`
+      //loggerSync(`\n\n ***** -> ${player.name} Wins with ${player.gameName}: ${gameText}\t${poolText} <- *****\n`)
     }
 
     let winner
@@ -383,7 +384,8 @@ class Croupier {
           }
         }
       }
-      console.log(`${this.players[j].name} has ${this.players[j].game_name} [Game Score: ${this.players[j].getGameScale()}] [Game Points: ${this.players[j].game_score}] [Pool Points: ${this.players[j].pool_score}]`)
+      this.gameLog = this.gameLog + `${this.players[j].name} has ${this.players[j].gameName} [Game Score: ${this.players[j].getGameScale()}] [Game Points: ${this.players[j].game_score}] [Pool Points: ${this.players[j].pool_score}]\n`
+      //loggerSync(`${this.players[j].name} has ${this.players[j].gameName} [Game Score: ${this.players[j].getGameScale()}] [Game Points: ${this.players[j].game_score}] [Pool Points: ${this.players[j].pool_score}]`)
       if (j === 0) {
         winner = this.players[j]
       } else {
@@ -407,55 +409,59 @@ class Croupier {
         }
       }
     }
-    printWinnerHand(winner)
+    this.gameLog = this.gameLog + printWinnerHand(winner)
     return winner
   }
 
   revealHands () {
-    this.players.forEach(function (player) {
-      console.log(player.name)
-      player.showHand()
-    })
+    for (let j = 0; j < this.players.length; j++) {
+      this.gameLog = this.gameLog + this.players[j].name + '\n'
+      this.gameLog = this.gameLog + this.players[j].showHand() + '\n'
+    }
   }
 
   revealDeck () {
-    return `${this.deck.toString()}`
+    this.gameLog = this.gameLog + this.deck.showDeck()    
   }
 }
 
-function logger (text, mode) {
+function loggerStream (text) {
   const fs = require('fs')
-  switch (mode) {
-    case 'stream':
-      var stream = fs.createWriteStream('stream_game-results.txt', { flags: 'a' })
-      stream.write(text + '\n')
-      stream.end()
-      break
-    case 'append':
-      break
-    case 'async':
-      break
-    default:
-      fs.writeFile('sync_game-results.txt', text, function (err) {
-        if (err) return console.log(err)
-        console.log('Saved in game-results.txt!')
-      })
-  }
+  console.log(text)
+  var stream = fs.createWriteStream('stream_game-results.txt', { flags: 'a' })
+  stream.write(text + '\n')
+  stream.end() 
+}
+
+function loggerAsync (text) {
+  const fs = require('fs')
+  console.log(text)
+  fs.writeFile('async_game-results.txt', text, function (err) {
+    if (err) return console.log(err)        
+  })
+}
+
+function loggerSync (text) {
+  const fs = require('fs')
+  console.log(text)
+  fs.writeFileSync('sync_game-results.txt', text, function (err) {
+    if (err) return console.log(err)        
+  })
 }
 
 function playGame () {
-  //  GAME START
+  //  GAME START  
   const playersNames = [
     'Carlos',
-    'Laura',
-    'Inés',
+    'Laura'
+    /* 'Inés',
     'Rubén',
     'María',
     'Eduardo',
     'Pedro',
     'Iker',
     'Noelia',
-    'Miren'
+    'Miren' */
   ]
 
   const players = []
@@ -467,22 +473,30 @@ function playGame () {
   const deck = new Deck()
   deck.init()
   const croupier = new Croupier(deck, players)
-  console.log('****************************************\nCroupier opens a new Deck:\n')
+  croupier.gameLog = croupier.gameLog + '****************************************\nCroupier opens a new Deck:\n'
   croupier.revealDeck()
-  console.log('\nCroupier shuffles Deck...\n')
+  croupier.gameLog = croupier.gameLog + '\nCroupier shuffles Deck...\n'
   croupier.shuffle()
-  console.log('\nCroupier dealing...\n')
+  croupier.gameLog = croupier.gameLog + '\nCroupier dealing...\n'
   croupier.deal()
-  console.log('\nPlayers reveal hands...\n')
+  croupier.gameLog = croupier.gameLog + '\nPlayers reveal hands...\n'
   croupier.revealHands()
-  console.log('\nCroupier resolves game:\n')
+  croupier.gameLog = croupier.gameLog + '\nCroupier resolves game:\n'
   const winner = croupier.resolveGame()
-  console.log('\nCroupier reveals remaining Cards in Deck:\n')
+  croupier.gameLog = croupier.gameLog + '\nCroupier reveals remaining Cards in Deck:\n'
   croupier.revealDeck()
-  return winner.game_name
+  // Write to file
+  loggerAsync(croupier.gameLog)
+  loggerSync(croupier.gameLog)
+  loggerStream(croupier.gameLog) */
+  return winner.gameName
 }
 
+playGame()
+
+
+/* Loop until a game is won with a specific score
 let game = playGame()
-while (game !== 'Straight Flush') {
+while (game !== 'Pair') {
   game = playGame()
-}
+}*/

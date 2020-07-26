@@ -23,4 +23,3 @@ Laura has High Card [Game Score: 1] [Game Points: 13] [Pool Points: 24]
 
 Croupier reveals remaining Cards in Deck:
  [5♥] [T♥] [8♧] [J♤] [7♢] [6♧] [8♢] [J♢] [K♢] [9♤] [2♧] [A♤] [5♧] [Q♧] [T♤] [7♥] [4♧] [7♧] [A♢] [2♢] [9♥] [Q♢] [Q♥] [9♢] [6♤] [6♥] [4♥] [5♢] [6♢] [4♢] [3♧] [A♧] [A♥] [K♧] [5♤] [T♢] [J♧] [J♥] [3♥] [2♥] [3♢] [K♥]
-
